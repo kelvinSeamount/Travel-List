@@ -24,6 +24,8 @@ export default function App() {
         item.id === id ? { ...item, packed: !item.packed } : item
       )
     );
+
+    //IMPLEMENTING DERIVED STATE
   }
   return (
     <div className="app">
@@ -34,7 +36,7 @@ export default function App() {
         handleDeleteItem={handleDeleteItem}
         handleToggleItem={handleToggleItem}
       />
-      <Stats />
+      <Stats items={items} />
     </div>
   );
 }
@@ -102,6 +104,14 @@ function PackingList({ items, handleDeleteItem, handleToggleItem }) {
           />
         ))}
       </ul>
+
+      <div className="actions">
+        <select>
+          <option value="input">Sort by input order</option>
+          <option value="description">Sort by description</option>
+          <option value="packed">Sort by packed status</option>
+        </select>
+      </div>
     </div>
   );
 }
@@ -124,10 +134,24 @@ function Item({ itemobj, handleDeleteItem, handleToggleItem }) {
   );
 }
 
-function Stats() {
+function Stats({ items }) {
+  if (!items.length)
+    return (
+      <p className="stats">
+        <em>Start adding some items to your packing List</em>
+      </p>
+    );
+  const numItems = items.length;
+  const numPacked = items.filter((item) => item.packed).length;
+  const percentage = Math.round((numPacked / numItems) * 100);
   return (
     <footer className="stats">
-      <em>🧳 You have Xitems on your list, and you already packed X (X%)</em>
+      <em>
+        {percentage === 100
+          ? "You got everything! Ready"
+          : `🧳 You have ${numItems} on your list, and you already packed ${numPacked}
+        (${percentage}%)`}
+      </em>
     </footer>
   );
 }
