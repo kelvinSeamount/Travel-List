@@ -24,8 +24,6 @@ export default function App() {
         item.id === id ? { ...item, packed: !item.packed } : item
       )
     );
-
-    //IMPLEMENTING DERIVED STATE
   }
   return (
     <div className="app">
@@ -91,11 +89,25 @@ function Form({ newAddItem }) {
 }
 
 function PackingList({ items, handleDeleteItem, handleToggleItem }) {
+  //IMPLEMENT SORTING
+  const [sortby, setSortBy] = useState("input");
+
+  let sortedItems;
+  //SortedItems replaces
+  if (sortby === "input") sortedItems = items;
+  if (sortby === "decription")
+    sortedItems = items
+      .slice()
+      .sort((a, b) => a.description.localeCompare(b.description));
+  if (sortby === "packed")
+    sortedItems = items
+      .slice()
+      .sort((a, b) => Number(a.packed) - Number(b.packed));
   //Here we use rendering list
   return (
     <div className="list">
       <ul>
-        {items.map((item) => (
+        {sortedItems.map((item) => (
           <Item
             itemobj={item}
             handleDeleteItem={handleDeleteItem}
@@ -106,7 +118,7 @@ function PackingList({ items, handleDeleteItem, handleToggleItem }) {
       </ul>
 
       <div className="actions">
-        <select>
+        <select value={sortby} onChange={(e) => setSortBy(e.target.value)}>
           <option value="input">Sort by input order</option>
           <option value="description">Sort by description</option>
           <option value="packed">Sort by packed status</option>
@@ -141,6 +153,8 @@ function Stats({ items }) {
         <em>Start adding some items to your packing List</em>
       </p>
     );
+
+  //IMPLEMENTING DERIVED STATE
   const numItems = items.length;
   const numPacked = items.filter((item) => item.packed).length;
   const percentage = Math.round((numPacked / numItems) * 100);
