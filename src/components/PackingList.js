@@ -13,7 +13,7 @@ export default function PackingList({
   let sortedItems;
   //SortedItems replaces
   if (sortby === "input") sortedItems = items;
-  if (sortby === "decription")
+  if (sortby === "description")
     sortedItems = items
       .slice()
       .sort((a, b) => a.description.localeCompare(b.description));
